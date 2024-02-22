@@ -1,0 +1,145 @@
+- - Tabla principal para almacenar información de los proyectos
+CREATE TABLE ProyectosEcommerce (
+IDProyecto INT PRIMARY KEY,
+Nombre NVARCHAR(255),
+URL NVARCHAR(255) -- Otros campos según sea necesario
+);
+- - Tabla para gestionar las categorías de productos
+CREATE TABLE CategoriasProductos (
+IDCategoria INT PRIMARY KEY,
+Nombre NVARCHAR(255),
+Descripcion NVARCHAR(MAX) 
+);
+- - Tabla para gestionar productos
+CREATE TABLE Productos (
+IDProducto INT PRIMARY KEY,
+IDProyecto INT,
+IDCategoria INT,
+Nombre NVARCHAR(255),
+Precio INT 
+);
+- - Tabla para almacenar información de clientes
+CREATE TABLE Clientes (
+IDCliente INT PRIMARY KEY,
+IDProyecto INT,
+Nombre NVARCHAR(255),
+Email NVARCHAR(255) 
+);
+- - Tabla para gestionar detalles específicos de un pedido
+CREATE TABLE DetallesPedido (
+IDDetallePedido INT PRIMARY KEY,
+IDPedido INT,
+IDProducto INT,
+Cantidad INT,
+PrecioUnitario INT -- Otros campos según sea necesario
+);
+- - Tabla para almacenar información de pedidos
+CREATE TABLE Pedidos (
+IDPedido INT PRIMARY KEY,
+IDProyecto INT,
+IDCliente INT,
+Fecha DATE,
+Total INT ¿
+);
+- - Tabla para gestionar el historial de clientes
+CREATE TABLE HistorialClientes (
+IDHistorial INT PRIMARY KEY,
+IDCliente INT,
+Fecha DATE,
+Accion NVARCHAR(255) 
+);
+- - Tabla para almacenar configuraciones específicas de cada tienda
+CREATE TABLE ConfiguracionesTienda (
+IDConfiguracion INT PRIMARY KEY,
+IDProyecto INT,
+NombreConfiguracion NVARCHAR(255),
+ValorConfiguracion NVARCHAR(255) 
+);
+- - Agregar las claves foráneas después de haber creado todas las tablas
+- - Clave foránea para la tabla Clientes
+ALTER TABLE Clientes
+ADD CONSTRAINT FK_Clientes_ProyectosEcommerce
+FOREIGN KEY (IDProyecto) REFERENCES ProyectosEcommerce(IDProyecto)
+ON DELETE CASCADE;
+- - Clave foránea para la tabla Productos
+ALTER TABLE Productos
+ADD CONSTRAINT FK_Productos_ProyectosEcommerce
+FOREIGN KEY (IDProyecto) REFERENCES ProyectosEcommerce(IDProyecto)
+ON DELETE CASCADE;
+
+ALTER TABLE Productos
+ADD CONSTRAINT FK_Productos_CategoriasProductos
+FOREIGN KEY (IDCategoria) REFERENCES CategoriasProductos(IDCategoria)
+ON DELETE CASCADE;
+
+- - Clave foránea para la tabla DetallesPedido
+ALTER TABLE DetallesPedido
+ADD CONSTRAINT FK_DetallesPedido_Pedidos
+FOREIGN KEY (IDPedido) REFERENCES Pedidos(IDPedido)
+ON DELETE CASCADE;
+
+ALTER TABLE DetallesPedido
+ADD CONSTRAINT FK_DetallesPedido_Productos
+FOREIGN KEY (IDProducto) REFERENCES Productos(IDProducto)
+ON DELETE CASCADE;
+
+- - Clave foránea para la tabla Pedidos
+ALTER TABLE Pedidos
+ADD CONSTRAINT FK_Pedidos_Clientes
+FOREIGN KEY (IDCliente) REFERENCES Clientes(IDCliente)
+ON DELETE NO ACTION;
+- - Clave foránea para la tabla HistorialClientes
+ALTER TABLE HistorialClientes
+ADD CONSTRAINT FK_HistorialClientes_Clientes
+FOREIGN KEY (IDCliente) REFERENCES Clientes(IDCliente)
+ON DELETE CASCADE;
+- - Clave foránea para la tabla ConfiguracionesTienda
+ALTER TABLE ConfiguracionesTienda
+ADD CONSTRAINT FK_ConfiguracionesTienda_ProyectosEcommerce
+FOREIGN KEY (IDProyecto) REFERENCES ProyectosEcommerce(IDProyecto)
+ON DELETE CASCADE;
+
+insersion de datos de prueba pa ojear la api:
+
+- - Inserciones en la tabla ProyectosEcommerce
+INSERT INTO ProyectosEcommerce (IDProyecto, Nombre, URL)
+VALUES
+(1, 'Proyecto1', '[http://proyecto1.com](http://proyecto1.com/)'),
+(2, 'Proyecto2', '[http://proyecto2.com](http://proyecto2.com/)');
+- - Inserciones en la tabla CategoriasProductos
+INSERT INTO CategoriasProductos (IDCategoria, Nombre, Descripcion)
+VALUES
+(1, 'Electrónicos', 'Productos electrónicos'),
+(2, 'Ropa', 'Ropa de moda');
+- - Inserciones en la tabla Productos
+INSERT INTO Productos (IDProducto, IDProyecto, IDCategoria, Nombre, Precio)
+VALUES
+(1, 1, 1, 'Laptop', 1000),
+(2, 1, 2, 'Camiseta', 20),
+(3, 2, 1, 'Teléfono móvil', 800);
+- - Inserciones en la tabla Clientes
+INSERT INTO Clientes (IDCliente, IDProyecto, Nombre, Email)
+VALUES
+(1, 1, 'Cliente1', 'cliente1@email.com'),
+(2, 2, 'Cliente2', 'cliente2@email.com');
+- - Inserciones en la tabla Pedidos
+INSERT INTO Pedidos (IDPedido, IDProyecto, IDCliente, Fecha, Total)
+VALUES
+(1, 1, 1, '2023-01-01', 1020),
+(2, 2, 2, '2023-02-01', 800);
+- - Inserciones en la tabla DetallesPedido
+INSERT INTO DetallesPedido (IDDetallePedido, IDPedido, IDProducto, Cantidad, PrecioUnitario)
+VALUES
+(1, 1, 1, 2, 1000),
+(2, 1, 2, 3, 20),
+(3, 2, 3, 1, 800);
+- - Inserciones en la tabla HistorialClientes
+INSERT INTO HistorialClientes (IDHistorial, IDCliente, Fecha, Accion)
+VALUES
+(1, 1, '2023-01-02', 'Compra realizada'),
+(2, 2, '2023-02-02', 'Compra realizada');
+- - Inserciones en la tabla ConfiguracionesTienda
+INSERT INTO ConfiguracionesTienda (IDConfiguracion, IDProyecto, NombreConfiguracion, ValorConfiguracion)
+VALUES
+(1, 1, 'Configuracion1', 'Valor1'),
+(2, 2, 'Configuracion2', 'Valor2');
